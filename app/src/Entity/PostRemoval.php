@@ -12,22 +12,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: PostRemovalRepository::class)]
-#[ApiResource(
-    collectionOperations: [
-        "get"=>[
-            "normalization_context"=>["groups"=>["get-with-images", "get-with-author"]]
-        ],
-        "post"=>
-            ["access_control"=>"is_granted('IS_AUTHENTICATED_FULLY')"],
-            "denormalization_context"=>["groups"=>["post"]]],
 
-    itemOperations: [
-        "get"=>[
-            "normalization_context"=>["groups"=>["get-with-images", "get-with-author"]]
-        ],
-        "put"=>
-            ["access_control"=>"is_granted('IS_AUTHENTICATED_FULLY')
-            and object.getAuthor() == user"]])]
 class PostRemoval implements AuthoredEntityInterface, PublishedDateInterface
 {
     #[ORM\Id]

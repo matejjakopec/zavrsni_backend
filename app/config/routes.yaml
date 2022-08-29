@@ -1,5 +1,6 @@
 controllers:
     resource: ../src/Controller/
+    exclude: '../src/Controller/ListController.php'
     type: annotation
 
 api_login_check:

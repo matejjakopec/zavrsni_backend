@@ -10,29 +10,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity]
-#[ApiResource(
-    collectionOperations: [
-        'get' => [
-            'controller' => NotFoundAction::class,
-            'read' => false,
-            'output' => false,
-        ],
-        'post' => [
-            ["access_control"=>"is_granted('IS_AUTHENTICATED_FULLY')"],
-            ["groups" => ["post"]]
-        ],
-        "api_post_garbages_offers_get_subresource" => [
-            "method"=>"GET",
-            "normalization_context"=>["groups"=>["get-with-offers"]]
-        ],
-        ],
-    itemOperations: [
-        "get"=>[
-            ["security" => "object.getAuthor() == user"]
-        ],
-        "put"=>
-            ["access_control" => "object.getAuthor() == user"]],
-   )]
+
 
 class Offer implements AuthoredEntityInterface, PublishedDateInterface
 {

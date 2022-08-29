@@ -2,8 +2,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Controller\GetUserFromTokenController;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -16,37 +14,15 @@ use Symfony\Component\Serializer\Annotation\MaxDepth;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ApiResource(
-    collectionOperations: [
-        "get"=>[
-            'method' => 'GET',
-            'path' => '/users',
-            'controller' => GetUserFromTokenController::class,
-            "normalization_context"=>["groups" => ["get", "get-with-images","get-with-offers"],
-                "enable_max_depth"=>true]],
-        "post"=>[
-            "denormalization_context"=>["groups"=>["post"]]],
-        "put"=>["normalization_context"=>["groups" => ["get"]]]],
-    itemOperations: [
-        "get"=>["access_control"=>"is_granted('IS_AUTHENTICATED_FULLY')",
-            "normalization_context"=>["groups" => ["get", "get-with-images", "get-with-offers"],
-                "enable_max_depth"=>true]],
-        "put"=>["access_control"=>"is_granted('IS_AUTHENTICATED_FULLY')
-            and object == user",
-            "denormalization_context"=>["groups"=>["put"]]]],
-    normalizationContext: ["groups"=>["get", "get-with-offers"]])]
-#[UniqueEntity("email")]
-#[UniqueEntity("username")]
+
 class User implements PasswordAuthenticatedUserInterface, UserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(["get", "get-with-images", "get-with-offers"])]
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["get", "post", "get-with-images", "get-with-offers"])]
     #[Assert\NotBlank]
     #[Assert\Length(min: 6, max: 30)]
     private $username;
@@ -54,19 +30,11 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank]
     #[Assert\Length(min: 8, max: 30)]
-    #[Groups(["put", "post"])]
     private $password;
-
-    #[Assert\NotBlank]
-    #[Assert\Expression("this.getPassword() === this.getRetypedPassword()",
-    message: "Passwords do not match")]
-    #[Groups(["put", "post"])]
-    private $retypedPassword;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank]
     #[Assert\Email]
-    #[Groups(["get", "post"])]
     private $email;
 
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: PostRemoval::class)]

@@ -36,9 +36,11 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+        - { path: ^/api/garbage/create, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/removal/create, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
-        - { path: ^/api/post_garbages, roles: PUBLIC_ACCESS }
-        - { path: ^/api/post_removals, roles: PUBLIC_ACCESS }
+        - { path: ^/api/garbage, roles: PUBLIC_ACCESS }
+        - { path: ^/api/removal, roles: PUBLIC_ACCESS }
         - { path: ^/api/images, roles: PUBLIC_ACCESS }
         - { path: ^/api/users, roles: PUBLIC_ACCESS }
         - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
