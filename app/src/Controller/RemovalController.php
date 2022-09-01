@@ -73,4 +73,47 @@ class RemovalController extends BaseController
 
         return $this->respondWithSuccess(Mapper::getGarbagePost($garbagePost));
     }
+
+    /**
+     * @Route("api/removal/{id}", methods={"PUT"})
+     */
+
+    public function putGarbagePost(int $id, ManagerRegistry $doctrine, Security $security, Request $request){
+        $entityManager = $doctrine->getManager();
+        $garbagePost = $entityManager->getRepository(PostRemoval::class)->find($id);
+
+        if($garbagePost->getAuthor() != $security->getUser()){
+            return $this->respondWithFailure("You are not authorized to do this action", 400);
+        }
+
+        $title = $request->get('title') == null ? $garbagePost->getTitle() : $request->get('title');
+        $content = $request->get('content') == null ? $garbagePost->getContent() : $request->get('content');
+        $location = $request->get('location') == null ? $garbagePost->getLocation() : $request->get('location');
+
+        $garbagePost->setTitle($title)
+            ->setContent($content)
+            ->setLocation($location);
+
+        $entityManager->flush();
+
+        return $this->respondWithSuccess(Mapper::getGarbagePost($garbagePost));
+    }
+
+    /**
+     * @Route("api/removal/{id}", methods={"DELETE"})
+     */
+
+    public function deleteGarbagePost(int $id, ManagerRegistry $doctrine, Security $security){
+        $entityManager = $doctrine->getManager();
+        $garbagePost = $entityManager->getRepository(PostRemoval::class)->find($id);
+
+        if($garbagePost->getAuthor() != $security->getUser()){
+            return $this->respondWithFailure("You are not authorized to do this action", 400);
+        }
+
+        $entityManager->remove($garbagePost);
+        $entityManager->flush();
+
+        return $this->respondWithSuccess(['message' => "Successfully deleted"]);
+    }
 }

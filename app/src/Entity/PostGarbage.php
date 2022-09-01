@@ -135,6 +135,14 @@ class PostGarbage implements AuthoredEntityInterface, PublishedDateInterface
         $this->images->removeElement($image);
     }
 
+    /**
+     * @return Collection
+     */
+    public function getOffers(): Collection
+    {
+        return $this->offers;
+    }
+
     public function addOffer(Offer $offer)
     {
         $this->offers->add($offer);
