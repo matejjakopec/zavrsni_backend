@@ -5,10 +5,11 @@ namespace App\Controller;
 use App\Entity\Image;
 use App\Entity\Offer;
 use App\Entity\User;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class Mapper
 {
-    public static function getUser(User $user){
+    public static function getUser(UserInterface $user){
         return [
             'id' => $user->getId(),
             'username' => $user->getUsername(),
@@ -69,6 +70,7 @@ class Mapper
             'title' => $post->getTitle(),
             'content' => $post->getContent(),
             'location' => $post->getLocation(),
+            'published' => $post->getPublished(),
             'images' => self::getImages($post->getImages()),
             'author' => self::getUser($post->getAuthor())
         ];

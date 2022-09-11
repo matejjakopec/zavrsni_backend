@@ -20,7 +20,7 @@ class RemovalController extends BaseController
     {
         $listController = new ListController(PostRemoval::class, $doctrine);
         $page = $request->query->get('page') == null ? 1 : $request->query->get('page');
-        $perPage = $request->query->get('perPage') == null ? 30 : $request->query->get('perPage');
+        $perPage = $request->query->get('perPage') == null ? 12 : $request->query->get('perPage');
         $orderBy = $request->query->get('orderBy') == null ? 'published' : $request->query->get('orderBy');
         $sortOrder = $request->query->get('sortOrder') == null ? 'ASC' : $request->query->get('sortOrder');
         $data = $listController->getData($page, $perPage, $orderBy, $sortOrder);

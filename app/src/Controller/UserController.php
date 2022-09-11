@@ -28,8 +28,23 @@ class UserController extends BaseController
         $this->security = $security;
         $this->passwordHasher = $passwordHasher;
     }
+
     /**
-     * @Route("api/users/{id}", methods={"GET"})
+     * @Route("api/users/current", methods={"GET"})
+     */
+    public function getCurrentUser(Security $security):Response{
+        $user = $this->security->getUser();
+
+        if(!$user){
+            return $this->respondWithFailure('Not Found', 404);
+        }
+
+        return $this->respondWithSuccess(Mapper::getUser($user));
+    }
+
+
+    /**
+     * @Route("api/users/{id}", methods={"GET"}, requirements={"id"="\d+"})
      */
     public function getUserInfo(int $id, ManagerRegistry $doctrine):Response{
         $user = $doctrine->getRepository(User::class)->findBy(['id' => $id]);
@@ -40,6 +55,8 @@ class UserController extends BaseController
 
         return $this->respondWithSuccess(Mapper::getUser($user[0]));
     }
+
+
 
     /**
      * @Route("api/users/create", methods={"POST"})
@@ -117,6 +134,7 @@ class UserController extends BaseController
         return false;
     }
 
+
     /**
      * @Route("api/users/{id}/removal", methods={"GET"})
      */
@@ -126,7 +144,7 @@ class UserController extends BaseController
         $user = $doctrine->getRepository(User::class)->findOneBy(['id' => $id]);
 
         $page = $request->query->get('page') == null ? 1 : $request->query->get('page');
-        $perPage = $request->query->get('perPage') == null ? 5 : $request->query->get('perPage');
+        $perPage = $request->query->get('perPage') == null ? 12 : $request->query->get('perPage');
         $orderBy = $request->query->get('orderBy') == null ? 'published' : $request->query->get('orderBy');
         $sortOrder = $request->query->get('sortOrder') == null ? 'ASC' : $request->query->get('sortOrder');
         $data = $listController->getPostsByAuthor($page, $perPage, $orderBy, $sortOrder, $user);
@@ -142,7 +160,7 @@ class UserController extends BaseController
         $user = $doctrine->getRepository(User::class)->findOneBy(['id' => $id]);
 
         $page = $request->query->get('page') == null ? 1 : $request->query->get('page');
-        $perPage = $request->query->get('perPage') == null ? 5 : $request->query->get('perPage');
+        $perPage = $request->query->get('perPage') == null ? 12 : $request->query->get('perPage');
         $orderBy = $request->query->get('orderBy') == null ? 'published' : $request->query->get('orderBy');
         $sortOrder = $request->query->get('sortOrder') == null ? 'ASC' : $request->query->get('sortOrder');
         $data = $listController->getPostsByAuthor($page, $perPage, $orderBy, $sortOrder, $user);
